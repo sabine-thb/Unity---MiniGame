@@ -30,4 +30,10 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = "Score : " + score;
         Debug.Log("AddPoint");
     }
+
+    public void ResetScore()
+    {
+        score = 0;
+        scoreText.text = "Score : " + score;
+    }
 }

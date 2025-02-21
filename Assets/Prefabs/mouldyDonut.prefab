@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 3390003441411419225}
   - component: {fileID: 2210918631734907772}
   m_Layer: 0
-  m_Name: mouldy donut
-  m_TagString: Untagged
+  m_Name: mouldyDonut
+  m_TagString: donut
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

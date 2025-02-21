@@ -11,10 +11,10 @@ public class DonutSpawner : MonoBehaviour
 
     private float spawnRangeX;
     private float spawnRangeZ;
+    private bool isSpawning = false; // Vérifie si le spawn est actif
 
     private void Start()
     {
-        // Calculer les limites de spawn en fonction de la surface
         MeshRenderer surfaceRenderer = spawnSurface.GetComponent<MeshRenderer>();
         if (surfaceRenderer != null)
         {
@@ -28,13 +28,30 @@ public class DonutSpawner : MonoBehaviour
             Debug.LogWarning("Surface de spawn non trouvée ou sans MeshRenderer. Utilisation des valeurs par défaut.");
         }
 
-        // Lancer la génération de donuts à intervalles réguliers
-        InvokeRepeating("SpawnDonuts", spawnInterval, spawnInterval);
+    }
+
+    public void StartSpawning()
+    {
+        if (!isSpawning)
+        {
+            isSpawning = true;
+            InvokeRepeating(nameof(SpawnDonuts), spawnInterval, spawnInterval);
+        }
+    }
+
+    public void StopSpawning()
+    {
+        if (isSpawning)
+        {
+            isSpawning = false;
+            CancelInvoke(nameof(SpawnDonuts));
+        }
     }
 
     private void SpawnDonuts()
     {
-        // Générer plusieurs donuts à chaque spawn
+        if (!isSpawning) return;
+
         for (int i = 0; i < numberOfDonutsPerSpawn; i++)
         {
             SpawnSingleDonut();
@@ -43,15 +60,11 @@ public class DonutSpawner : MonoBehaviour
 
     private void SpawnSingleDonut()
     {
-        // Position aléatoire de spawn sur l'axe X et Z, limitée par la surface de spawn
         float randomX = Random.Range(-spawnRangeX, spawnRangeX) + spawnSurface.transform.position.x;
         float randomZ = Random.Range(-spawnRangeZ, spawnRangeZ) + spawnSurface.transform.position.z;
         Vector3 spawnPosition = new Vector3(randomX, spawnHeight, randomZ);
 
-        // Choisir aléatoirement si c'est un donut normal ou moisi
         GameObject donutToSpawn = Random.Range(0f, 1f) > 0.2f ? donutPrefab : moldyDonutPrefab;
-
-        // Instancier le donut à la position calculée
         Instantiate(donutToSpawn, spawnPosition, Quaternion.identity);
     }
 }

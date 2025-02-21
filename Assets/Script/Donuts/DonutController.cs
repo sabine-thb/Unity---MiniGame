@@ -8,6 +8,17 @@ public class DonutController : MonoBehaviour
     public bool isMoldy = false; // Indique si le donut est moisi ou normal
 
     private float elapsedTime = 0f; // Temps écoulé depuis la création
+    private LifeManager lifeManager;
+
+    private void Start()
+    {
+        lifeManager = FindObjectOfType<LifeManager>();
+
+        if (lifeManager == null)
+        {
+            Debug.LogError("LifeManager introuvable dans la scène !");
+        }
+    }
 
     private void Update()
     {
@@ -31,17 +42,22 @@ public class DonutController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Ajouter des points seulement si le donut n'est pas moisi
             if (isMoldy)
             {
-                Debug.Log("Donut moisi collecté. Pas de points.");
+                Debug.Log("Donut moisi collecté. Perte d'une vie !");
+                if (lifeManager != null)
+                {
+                    lifeManager.LoseLife(); 
+                }
+
+                SoundManager.instance.PlayBadDonutSound(); 
             }
             else
             {
-                // Ajouter des points au joueur pour un donut normal
                 if (ScoreManager.instance != null)
                 {
                     ScoreManager.instance.AddScore(1);
+                    SoundManager.instance.PlayCollectSound(); 
                 }
                 else
                 {
@@ -49,7 +65,6 @@ public class DonutController : MonoBehaviour
                 }
             }
 
-            // Détruire le donut après qu'il ait été collecté
             Destroy(gameObject);
         }
     }

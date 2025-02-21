@@ -1,28 +1,24 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.Events;
 
 public class InterfaceHandler : MonoBehaviour
 {
     public TextEffect textEffect;
     public GameObject UI;
-    private float focalLengthStart = 60f;
-    private float focalLengthEnd = 0f;
     public bool hideByDefault = true;
     private bool canInteract = true;
     private bool isHidden = true;
 
-    private DepthOfField depthOfField;
-    private UnityEvent onXPressed;
+    [SerializeField] private UnityEvent onXPressed;
 
     public CameraManager cameraManager; // Assurez-vous de lier ceci dans l'inspecteur
 
     public void Start()
     {
         isHidden = hideByDefault;
+
         if (onXPressed == null)
             onXPressed = new UnityEvent();
 
@@ -36,6 +32,15 @@ public class InterfaceHandler : MonoBehaviour
 
         // Initialiser l'état de visibilité du Canvas
         cameraManager.SetCanvasVisibility(!hideByDefault);
+
+        if (hideByDefault)
+        {
+            HideUI(false);
+        }
+        else
+        {
+            ShowUI(false);
+        }
     }
 
     public void Update()
@@ -46,23 +51,11 @@ public class InterfaceHandler : MonoBehaviour
         }
     }
 
-    private void OnSceneInitialized()
-    {
-
-        if (hideByDefault)
-        {
-            hideUI(false);
-        }
-        else
-        {
-            showUI(false);
-        }
-    }
-
     protected virtual void OnXPressed()
     {
-        hideUI(true);
+        HideUI(true);
         textEffect?.SkipToLastParagraph();
+        onXPressed.Invoke(); // Permet d'ajouter des événements dans l'Inspector
 
         Transform interactableTransform = transform.Find("Interactable");
         if (interactableTransform != null)
@@ -71,31 +64,32 @@ public class InterfaceHandler : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Le GameObject appelé 'interactable' n'a pas été trouvé parmi les enfants.");
+            Debug.LogWarning("Le GameObject 'Interactable' n'a pas été trouvé.");
         }
     }
 
-    public void hideUI(bool smooth = true)
+    public void HideUI(bool smooth = true)
     {
-        if (canInteract)
-        {
-            isHidden = true;
-            StartCoroutine(FadeObject(UI, false, smooth));
-            cameraManager.SetCanvasVisibility(false); // Mettre à jour l'état du Canvas
-        }
+        isHidden = true;
+        StartCoroutine(FadeObject(UI, false, smooth));
+        cameraManager.SetCanvasVisibility(false); // Mettre à jour l'état du Canvas
+
+        Debug.Log("HideUI");
     }
 
-    public void showUI(bool smooth = true)
+    public void ShowUI(bool smooth = true)
     {
         if (canInteract)
         {
             isHidden = false;
             StartCoroutine(FadeObject(UI, true, smooth));
             cameraManager.SetCanvasVisibility(true); // Mettre à jour l'état du Canvas
+
+            Debug.Log("ShowUI");
         }
     }
 
-    protected virtual void onFadeFinished(bool opening)
+    protected virtual void OnFadeFinished(bool opening)
     {
         if (opening)
         {
@@ -122,21 +116,11 @@ public class InterfaceHandler : MonoBehaviour
 
         canvasGroup.alpha = startAlpha;
 
-        if (depthOfField != null)
-        {
-            depthOfField.focalLength.value = isOpening ? focalLengthEnd : focalLengthStart;
-        }
-
         if (!smooth)
         {
             canInteract = true;
             canvasGroup.alpha = endAlpha;
-            onFadeFinished(isOpening);
-
-            if (depthOfField != null)
-            {
-                depthOfField.focalLength.value = isOpening ? focalLengthStart : focalLengthEnd;
-            }
+            OnFadeFinished(isOpening);
 
             if (!isOpening)
             {
@@ -150,25 +134,12 @@ public class InterfaceHandler : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
-
-            if (depthOfField != null)
-            {
-                depthOfField.focalLength.value = Mathf.Lerp(
-                    isOpening ? focalLengthEnd : focalLengthStart,
-                    isOpening ? focalLengthStart : focalLengthEnd,
-                    elapsedTime / duration);
-            }
             yield return null;
         }
 
         canInteract = true;
         canvasGroup.alpha = endAlpha;
-        onFadeFinished(isOpening);
-
-        if (depthOfField != null)
-        {
-            depthOfField.focalLength.value = isOpening ? focalLengthStart : focalLengthEnd;
-        }
+        OnFadeFinished(isOpening);
 
         if (!isOpening)
         {
