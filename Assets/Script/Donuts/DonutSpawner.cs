@@ -5,9 +5,10 @@ public class DonutSpawner : MonoBehaviour
     public GameObject donutPrefab; // Préfabriqué du donut normal
     public GameObject moldyDonutPrefab; // Préfabriqué du donut moisi
     public GameObject spawnSurface; // Référence à la surface de spawn
-    public float spawnInterval = 1f; // Temps entre chaque spawn
+    public float spawnInterval = 1.5f; // Augmenté légèrement pour espacer les spawns
     public float spawnHeight = 12f; // Hauteur à laquelle les donuts apparaissent
-    public int numberOfDonutsPerSpawn = 5; // Nombre de donuts générés à chaque spawn
+    public int numberOfDonutsPerSpawn = 3; // Réduit le nombre de donuts générés par spawn
+    public float spawnSpacingFactor = 1.5f; // Facteur pour espacer les apparitions
 
     private float spawnRangeX;
     private float spawnRangeZ;
@@ -18,16 +19,15 @@ public class DonutSpawner : MonoBehaviour
         MeshRenderer surfaceRenderer = spawnSurface.GetComponent<MeshRenderer>();
         if (surfaceRenderer != null)
         {
-            spawnRangeX = surfaceRenderer.bounds.size.x / 2;
-            spawnRangeZ = surfaceRenderer.bounds.size.z / 2;
+            spawnRangeX = (surfaceRenderer.bounds.size.x / 2) * spawnSpacingFactor;
+            spawnRangeZ = (surfaceRenderer.bounds.size.z / 2) * spawnSpacingFactor;
         }
         else
         {
-            spawnRangeX = 10f;
-            spawnRangeZ = 10f;
+            spawnRangeX = 15f;
+            spawnRangeZ = 15f;
             Debug.LogWarning("Surface de spawn non trouvée ou sans MeshRenderer. Utilisation des valeurs par défaut.");
         }
-
     }
 
     public void StartSpawning()
@@ -65,6 +65,12 @@ public class DonutSpawner : MonoBehaviour
         Vector3 spawnPosition = new Vector3(randomX, spawnHeight, randomZ);
 
         GameObject donutToSpawn = Random.Range(0f, 1f) > 0.2f ? donutPrefab : moldyDonutPrefab;
-        Instantiate(donutToSpawn, spawnPosition, Quaternion.identity);
+        
+        // Rotation aléatoire : X entre 0 et -90, Z entre -30 et 30
+        float randomRotationX = Random.Range(-90f, 0f);
+        float randomRotationZ = Random.Range(-30f, 30f);
+        Quaternion randomRotation = Quaternion.Euler(randomRotationX, 0, randomRotationZ);
+
+        Instantiate(donutToSpawn, spawnPosition, randomRotation);
     }
 }
