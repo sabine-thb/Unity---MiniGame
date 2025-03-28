@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+
+	private Animator animator;
+
 	#region Variables: Movement
 
 	private Vector2 _input;
@@ -40,8 +43,14 @@ public class PlayerController : MonoBehaviour
 	
 	private void Awake()
 	{
+		animator = GetComponentInChildren<Animator>();
+		if (animator == null)
+			{
+				Debug.LogError("Animator non trouvé sur l'enfant du Player !");
+			}
 		_characterController = GetComponent<CharacterController>();
 		_mainCamera = Camera.main;
+
 	}
 
 	private void Update()
@@ -49,6 +58,30 @@ public class PlayerController : MonoBehaviour
 		ApplyRotation();
 		ApplyGravity();
 		ApplyMovement();
+
+		
+	if (_input.sqrMagnitude > 0.1f || movement.isSprinting)
+    {
+        animator.SetBool("isMoving", true);
+        Debug.Log("--------isMoving = true");
+    }
+    else
+    {
+        animator.SetBool("isMoving", false);
+        Debug.Log("---------isMoving = false");
+    }
+
+    // Gestion de l'animation "isJumping" si le personnage est en l'air
+    if (!IsGrounded())
+    {
+        animator.SetBool("isJumping", true);
+        Debug.Log("--------isJumping = true");
+    }
+    else
+    {
+        animator.SetBool("isJumping", false);
+        Debug.Log("------isJumping = false");
+    }
 	}
 
 	private void ApplyGravity()
@@ -65,15 +98,39 @@ public class PlayerController : MonoBehaviour
 		_direction.y = _velocity;
 	}
 	
-	private void ApplyRotation()
-	{
-		if (_input.sqrMagnitude == 0) return;
+	// private void ApplyRotation()
+	// {
+	// 	if (_input.sqrMagnitude == 0) return;
 
-		_direction = Quaternion.Euler(0.0f, _mainCamera.transform.eulerAngles.y, 0.0f) * new Vector3(_input.x, 0.0f, _input.y);
-		var targetRotation = Quaternion.LookRotation(_direction, Vector3.up);
+	// 	_direction = Quaternion.Euler(0.0f, _mainCamera.transform.eulerAngles.y, 0.0f) * new Vector3(_input.x, 0.0f, _input.y);
+	// 	var targetRotation = Quaternion.LookRotation(_direction, Vector3.up);
 
-		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-	}
+	// 	transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+	// }
+
+private void ApplyRotation()
+{
+    // Si l'entrée est nulle, ne pas appliquer de rotation
+    if (_input.sqrMagnitude == 0) return; 
+
+    // Calculer la direction du mouvement
+    _direction = new Vector3(_input.x, 0.0f, _input.y);
+
+    // Appliquer la rotation basée sur la direction du mouvement
+    if (_direction != Vector3.zero)
+    {
+        // Calculer la rotation cible
+        var targetRotation = Quaternion.LookRotation(_direction);
+
+        // Conserver l'orientation initiale à 180°, mais appliquer la direction du mouvement à partir de là
+        var rotation = Quaternion.Euler(0f, 180f, 0f) * targetRotation;
+
+        // Appliquer la rotation à une vitesse spécifiée
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+    }
+}
+
+
 
 	private void ApplyMovement()
 	{
@@ -87,6 +144,7 @@ public class PlayerController : MonoBehaviour
 	{
 		_input = context.ReadValue<Vector2>();
 		_direction = new Vector3(_input.x, 0.0f, _input.y);
+
 	}
 
 	public void Jump(InputAction.CallbackContext context)
@@ -102,6 +160,7 @@ public class PlayerController : MonoBehaviour
 	public void Sprint(InputAction.CallbackContext context)
 	{
 		movement.isSprinting = context.started || context.performed;
+
 	}
 
 	private IEnumerator WaitForLanding()

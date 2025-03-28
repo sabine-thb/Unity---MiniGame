@@ -21,19 +21,19 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        scoreText.text = "Score : 0";
+        scoreText.text = "Score : 0 / 10";
     }
 
     public void AddScore(int value)
     {
         score += value;
-        scoreText.text = "Score : " + score;
+        scoreText.text = "Score : " + score + " / 10";
         Debug.Log("AddPoint");
     }
 
     public void ResetScore()
     {
         score = 0;
-        scoreText.text = "Score : " + score;
+        scoreText.text = "Score : " + score+ " / 10";
     }
 }

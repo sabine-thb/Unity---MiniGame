@@ -32,7 +32,7 @@ public class DonutController : MonoBehaviour
         elapsedTime += Time.deltaTime;
 
         // Détruire l'objet si sa position est trop basse
-        if (transform.position.y <= -2)
+        if (transform.position.y <= -1)
         {
             Destroy(gameObject);
         }
