@@ -6,9 +6,9 @@ public class DonutSpawner : MonoBehaviour
     public GameObject donutPrefab;
     public GameObject moldyDonutPrefab; 
     public GameObject spawnSurface; 
-    public float spawnInterval = 1.5f; // time between spawns
+    public float spawnInterval = 3f; // time between spawns
     public float spawnHeight = 12f; // Height at which donuts appear
-    public int numberOfDonutsPerSpawn = 3; 
+    public int numberOfDonutsPerSpawn = 1; 
     public float spawnSpacingFactor = 1f; // Facteur pour espacer les apparitions
 
     private float spawnRangeX;
