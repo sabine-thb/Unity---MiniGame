@@ -10,6 +10,8 @@ public class ScoreManager : MonoBehaviour
     private int score = 0;
     public UnityEvent onWin;
 
+    public UnityEvent onFinishLevel;
+
     private void Awake()
     {
         if (instance == null)
@@ -28,17 +30,39 @@ public class ScoreManager : MonoBehaviour
 
          if (onWin == null)
             onWin = new UnityEvent();
+
+        if (onFinishLevel == null)
+            onFinishLevel = new UnityEvent();
     }
 
-    public void AddScore(int value)
+     public void AddScore(int value)
     {
         score += value;
         scoreText.text = "Score : " + score + " / 10";
         Debug.Log("AddPoint");
 
-         if (score >= 1)
+        if (score >= 1)
         {
-            LoadNextLevel();
+            string currentSceneName = SceneManager.GetActiveScene().name;
+
+            if (currentSceneName == "Level 1" || currentSceneName == "Level 2")
+            {
+                onFinishLevel.Invoke();
+                foreach (GameObject donut in GameObject.FindGameObjectsWithTag("donut"))
+                {
+                    Destroy(donut);
+                }
+                Debug.Log("Vous avez terminé le niveau !"); 
+            }
+            else if (currentSceneName == "Level 3")
+            {
+                foreach (GameObject donut in GameObject.FindGameObjectsWithTag("donut"))
+                {
+                    Destroy(donut);
+                }
+                onWin.Invoke();
+                Debug.Log("Vous avez terminé tous les niveaux !");
+            }
         }
     }
 
@@ -48,37 +72,5 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = "Score : " + score+ " / 10";
     }
 
-    private void LoadNextLevel()
-    {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-
-        // Déterminer la scène suivante
-        string nextSceneName = "";
-
-        if (currentSceneName == "Level 1")
-        {
-            nextSceneName = "Level 2";
-        }
-        else if (currentSceneName == "Level 2")
-        {
-            nextSceneName = "Level 3";
-        }
-        else if (currentSceneName == "Level 3")
-        {
-       
-            {
-                onWin.Invoke();
-                Debug.Log("Vous avez terminé tous les niveaux !");
-            }
-            return;
-        }
-        else
-        {
-            Debug.LogError("Nom de scène inconnu !");
-            return;
-        }
-
-            // Charger la scène suivante
-            SceneManager.LoadScene(nextSceneName);
-        }
+    
 }

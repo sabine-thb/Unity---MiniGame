@@ -98,34 +98,21 @@ public class PlayerController : MonoBehaviour
 		_direction.y = _velocity;
 	}
 	
-	// private void ApplyRotation()
-	// {
-	// 	if (_input.sqrMagnitude == 0) return;
-
-	// 	_direction = Quaternion.Euler(0.0f, _mainCamera.transform.eulerAngles.y, 0.0f) * new Vector3(_input.x, 0.0f, _input.y);
-	// 	var targetRotation = Quaternion.LookRotation(_direction, Vector3.up);
-
-	// 	transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-	// }
 
 private void ApplyRotation()
 {
-    // Si l'entrée est nulle, ne pas appliquer de rotation
+
     if (_input.sqrMagnitude == 0) return; 
 
-    // Calculer la direction du mouvement
+
     _direction = new Vector3(_input.x, 0.0f, _input.y);
 
-    // Appliquer la rotation basée sur la direction du mouvement
     if (_direction != Vector3.zero)
     {
-        // Calculer la rotation cible
         var targetRotation = Quaternion.LookRotation(_direction);
 
-        // Conserver l'orientation initiale à 180°, mais appliquer la direction du mouvement à partir de là
         var rotation = Quaternion.Euler(0f, 180f, 0f) * targetRotation;
 
-        // Appliquer la rotation à une vitesse spécifiée
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
 }
@@ -172,7 +159,22 @@ private void ApplyRotation()
 	}
 
 	private bool IsGrounded() => _characterController.isGrounded;
+
+
+
+	 public void Respawn()
+    {
+        _characterController.enabled = false; // Désactiver temporairement le CharacterController
+        transform.position = Vector3.zero; // Remettre le joueur à (0, 0, 0)
+        transform.rotation = Quaternion.identity; // Réinitialiser la rotation
+        _characterController.enabled = true; // Réactiver le CharacterController
+        _velocity = 0f; // Réinitialiser la vitesse verticale
+        _numberOfJumps = 0; // Réinitialiser le nombre de sauts
+        movement.currentSpeed = 0f; // Réinitialiser la vitesse de mouvement
+    }
 }
+
+
 
 [Serializable]
 public struct Movement

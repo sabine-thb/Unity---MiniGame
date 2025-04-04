@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class DonutSpawner : MonoBehaviour
+
 {
     public GameObject donutPrefab; // Préfabriqué du donut normal
     public GameObject moldyDonutPrefab; // Préfabriqué du donut moisi
@@ -13,6 +14,7 @@ public class DonutSpawner : MonoBehaviour
     private float spawnRangeX;
     private float spawnRangeZ;
     private bool isSpawning = false; // Vérifie si le spawn est actif
+
 
     private void Start()
     {

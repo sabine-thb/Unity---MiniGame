@@ -65,7 +65,8 @@ public class DonutController : MonoBehaviour
                 }
             }
 
-            Destroy(gameObject);
         }
+
+        Destroy(gameObject);
     }
 }

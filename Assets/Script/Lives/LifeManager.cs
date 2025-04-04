@@ -8,18 +8,9 @@ public class LifeManager : MonoBehaviour
     public Image[] lifeIcons;
     public UnityEvent OnGameOver;
 
+    public UnityEvent OnReplay;
 
-    // void Start()
-    // {
-    //      GameObject[] donuts = GameObject.FindGameObjectsWithTag("donut");
-    //      Debug.Log("Donuts trouvés : " + donuts.Length);
-    // }
-
-    // void Update()
-    // {
-    //     GameObject[] donuts = GameObject.FindGameObjectsWithTag("donut");
-    //      Debug.Log("Donuts trouvés : " + donuts.Length);
-    // }
+    public PlayerController playerController;
 
 
     public void LoseLife()
@@ -39,7 +30,7 @@ public class LifeManager : MonoBehaviour
 
     
 
-    public void RestoreLives()
+    private void RestoreLives()
     {
         lives = 3;
 
@@ -65,10 +56,32 @@ public class LifeManager : MonoBehaviour
 
         SoundManager.instance.PlayGameOverSound();
 
-        RestoreLives();
-
-        ScoreManager.instance.ResetScore();
 
         Debug.Log("Game Over !");
+    }
+
+
+    public void Replay()
+    {
+        RestoreLives();
+
+        foreach (GameObject donut in GameObject.FindGameObjectsWithTag("donut"))
+        {
+            Destroy(donut);
+        }
+
+         if (playerController != null)
+        {
+            playerController.Respawn();
+        }
+        else
+        {
+            Debug.LogError("PlayerController n'est pas assigné dans l'inspecteur !");
+        }
+
+        ScoreManager.instance.ResetScore();
+        OnReplay?.Invoke();
+
+        Debug.Log("Replay !");
     }
 }
