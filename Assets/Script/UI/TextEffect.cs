@@ -19,7 +19,6 @@ public class TextEffect : MonoBehaviour
 
     public void StartEffect()
     {
-        // on reset tout 
         i = 0;
         fadeInStarted = false; 
         textComponent.text = stringArray.Length > 0 ? stringArray[i] : "";
