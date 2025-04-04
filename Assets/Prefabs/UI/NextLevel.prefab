@@ -830,7 +830,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "10 / 10 donuts attrap\xE9s."
+  m_text: "5 / 5 donuts attrap\xE9s."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c728a5cf12a544b3582c21af0e1232f4, type: 2}
   m_sharedMaterial: {fileID: 989105404578371851, guid: c728a5cf12a544b3582c21af0e1232f4,

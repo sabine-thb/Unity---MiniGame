@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("---------isMoving = false");
     }
 
-    // Gestion de l'animation "isJumping" si le personnage est en l'air
+    // “isJumping” animation if the character is in the air
     if (!IsGrounded())
     {
         animator.SetBool("isJumping", true);
@@ -164,13 +164,12 @@ private void ApplyRotation()
 
 	 public void Respawn()
     {
-        _characterController.enabled = false; // Désactiver temporairement le CharacterController
-        transform.position = Vector3.zero; // Remettre le joueur à (0, 0, 0)
-        transform.rotation = Quaternion.identity; // Réinitialiser la rotation
-        _characterController.enabled = true; // Réactiver le CharacterController
-        _velocity = 0f; // Réinitialiser la vitesse verticale
-        _numberOfJumps = 0; // Réinitialiser le nombre de sauts
-        movement.currentSpeed = 0f; // Réinitialiser la vitesse de mouvement
+        _characterController.enabled = false; 
+        transform.position = Vector3.zero; 
+        transform.rotation = Quaternion.identity; 
+        _characterController.enabled = true; 
+        _velocity = 0f; 
+        movement.currentSpeed = 0f; 
     }
 }
 

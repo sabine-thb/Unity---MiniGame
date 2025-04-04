@@ -13,7 +13,7 @@ public class InterfaceHandler : MonoBehaviour
 
     [SerializeField] private UnityEvent onXPressed;
 
-    public CameraManager cameraManager; // Assurez-vous de lier ceci dans l'inspecteur
+    public CameraManager cameraManager; 
 
     public void Start()
     {
@@ -24,13 +24,13 @@ public class InterfaceHandler : MonoBehaviour
 
         onXPressed.AddListener(OnXPressed);
 
-        // Déclencher l'effet de texte immédiatement si l'interface n'est pas cachée par défaut
+        // Trigger text effect immediately if interface is not hidden by default
         if (!hideByDefault)
         {
             textEffect?.StartEffect();
         }
 
-        // Initialiser l'état de visibilité du Canvas
+        // Initialize Canvas visibility state
         cameraManager.SetCanvasVisibility(!hideByDefault);
 
         if (hideByDefault)
@@ -55,7 +55,7 @@ public class InterfaceHandler : MonoBehaviour
     {
         HideUI(true);
         textEffect?.SkipToLastParagraph();
-        onXPressed.Invoke(); // Permet d'ajouter des événements dans l'Inspector
+        onXPressed.Invoke();
 
         Transform interactableTransform = transform.Find("Interactable");
         if (interactableTransform != null)
@@ -72,7 +72,7 @@ public class InterfaceHandler : MonoBehaviour
     {
         isHidden = true;
         StartCoroutine(FadeObject(UI, false, smooth));
-        cameraManager.SetCanvasVisibility(false); // Mettre à jour l'état du Canvas
+        cameraManager.SetCanvasVisibility(false); 
 
         Debug.Log("HideUI");
     }
@@ -83,8 +83,7 @@ public class InterfaceHandler : MonoBehaviour
         {
             isHidden = false;
             StartCoroutine(FadeObject(UI, true, smooth));
-            cameraManager.SetCanvasVisibility(true); // Mettre à jour l'état du Canvas
-
+            cameraManager.SetCanvasVisibility(true); 
             Debug.Log("ShowUI");
         }
     }

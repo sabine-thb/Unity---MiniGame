@@ -51,7 +51,7 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    // Méthode pour mettre à jour l'état de la visibilité du Canvas
+    // update Canvas visibility status
     public void SetCanvasVisibility(bool isVisible)
     {
         isCanvasVisible = isVisible;

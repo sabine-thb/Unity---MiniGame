@@ -3,17 +3,17 @@ using UnityEngine;
 public class DonutSpawner : MonoBehaviour
 
 {
-    public GameObject donutPrefab; // Préfabriqué du donut normal
-    public GameObject moldyDonutPrefab; // Préfabriqué du donut moisi
-    public GameObject spawnSurface; // Référence à la surface de spawn
-    public float spawnInterval = 1.5f; // Augmenté légèrement pour espacer les spawns
-    public float spawnHeight = 12f; // Hauteur à laquelle les donuts apparaissent
-    public int numberOfDonutsPerSpawn = 3; // Réduit le nombre de donuts générés par spawn
-    public float spawnSpacingFactor = 1.5f; // Facteur pour espacer les apparitions
+    public GameObject donutPrefab;
+    public GameObject moldyDonutPrefab; 
+    public GameObject spawnSurface; 
+    public float spawnInterval = 1.5f; // time between spawns
+    public float spawnHeight = 12f; // Height at which donuts appear
+    public int numberOfDonutsPerSpawn = 3; 
+    public float spawnSpacingFactor = 1f; // Facteur pour espacer les apparitions
 
     private float spawnRangeX;
     private float spawnRangeZ;
-    private bool isSpawning = false; // Vérifie si le spawn est actif
+    private bool isSpawning = false; 
 
 
     private void Start()
@@ -68,7 +68,7 @@ public class DonutSpawner : MonoBehaviour
 
         GameObject donutToSpawn = Random.Range(0f, 1f) > 0.2f ? donutPrefab : moldyDonutPrefab;
         
-        // Rotation aléatoire : X entre 0 et -90, Z entre -30 et 30
+        // Random donut rotation: X between 0 and -90, Z between -30 and 30
         float randomRotationX = Random.Range(-90f, 0f);
         float randomRotationZ = Random.Range(-30f, 30f);
         Quaternion randomRotation = Quaternion.Euler(randomRotationX, 0, randomRotationZ);

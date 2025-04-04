@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
         if (collectClips.Length > 0)
         {
             int randomIndex = Random.Range(0, collectClips.Length);
-            collectSource.clip = collectClips[randomIndex]; // Assigner un clip aléatoire
+            collectSource.clip = collectClips[randomIndex]; // assigns a random sound
             collectSource.Play();
         }
     }

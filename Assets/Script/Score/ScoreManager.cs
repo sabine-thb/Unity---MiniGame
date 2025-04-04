@@ -26,7 +26,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        scoreText.text = "Score : 0 / 10";
+        scoreText.text = "Score : 0 / 5";
 
          if (onWin == null)
             onWin = new UnityEvent();
@@ -38,10 +38,10 @@ public class ScoreManager : MonoBehaviour
      public void AddScore(int value)
     {
         score += value;
-        scoreText.text = "Score : " + score + " / 10";
+        scoreText.text = "Score : " + score + " / 5";
         Debug.Log("AddPoint");
 
-        if (score >= 1)
+        if (score >= 5)
         {
             string currentSceneName = SceneManager.GetActiveScene().name;
 
@@ -69,7 +69,7 @@ public class ScoreManager : MonoBehaviour
     public void ResetScore()
     {
         score = 0;
-        scoreText.text = "Score : " + score+ " / 10";
+        scoreText.text = "Score : " + score+ " / 5";
     }
 
     
